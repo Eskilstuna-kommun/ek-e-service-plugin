@@ -5,6 +5,8 @@ This is a plugin which allows "remote" activation of preconfigured layers in an 
 #### Example usage of ek-e-service plugin
 
 **index.html:**
+
+Swap "http://localhost:9966/" to the URL of the Origo map, and "http://localhost:9008" to the URL of the eservice.
 ```
     <head>
     	<meta charset="utf-8">
@@ -28,4 +30,92 @@ This is a plugin which allows "remote" activation of preconfigured layers in an 
       });
     </script>
 ```
- Codepen: https://codepen.io/jokd/pen/VwmgjYP
+
+**host.html**
+
+Swap "http://localhost:9966/" to the URL of the Origo map.
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script type="module" src="./main.js" defer></script>
+  </head>
+  <body>
+    <iframe id="origo-map" src="http://localhost:9966/" style="width: 800px; height: 600px"></iframe>
+    <p><button id="button">Send message to map</button></p>
+  </body>
+</html>
+```
+
+**main.js**
+
+Add the layer names of the layers you want to activate in the "layers"-array.
+```
+const iframeElement = document.querySelector('#origo-map');
+const buttonElement = document.querySelector('#button');
+
+function sendMessage(message) {
+  const iframeOrigin = new URL(iframeElement.src).origin;
+  iframeElement.contentWindow.postMessage(message, iframeOrigin);
+}
+
+window.addEventListener('message', (message) => {
+  console.log(message.data);
+
+  const data = message.data;
+  const messageJson = JSON.parse(data);
+  if (messageJson.targetPlugin == 'ekeservice' && messageJson.type == 'pluginLoaded') {
+    sendMessage(JSON.stringify({
+      targetPlugin: 'ekeservice',
+      type: 'addLayers',
+      data: {
+        layers: ['pluginLayer', 'pluginLayer2']
+      }
+    }));
+  }
+});
+```
+
+**index.json**
+
+Add the layers that are to be able to be activated, just like you would add normal layers, but in the list "eserviceLayers".
+```
+...
+"eserviceLayers": [
+    {
+      "name": "pluginLayer",
+      "title": "plugin-aktiverat lager",
+      "group": "root",
+      "source": "data/origo-cities-3857.geojson",
+      "style": "origo-logo",
+      "type": "GEOJSON",
+      "attributes": [
+        {
+          "name": "name"
+        }
+      ],
+      "visible": true
+    },
+    {
+      "name": "pluginLayer2",
+      "title": "plugin-aktiverat lager2",
+      "group": "root",
+      "source": "data/origo-cities-3857.geojson",
+      "style": "origo-logo",
+      "type": "GEOJSON",
+      "attributes": [
+        {
+          "name": "name"
+        }
+      ],
+      "visible": true
+    }
+  ],
+...
+```
+
+

@@ -6,13 +6,6 @@ function sendMessage(message) {
   iframeElement.contentWindow.postMessage(message, iframeOrigin);
 }
 
-buttonElement.addEventListener('click', () => sendMessage(JSON.stringify({
-  targetPlugin: 'ekeservice',
-  type: 'addLayers',
-  data: {layers: ['pluginLayer']}
-}
-)));
-
 window.addEventListener('message', (message) => {
   console.log(message.data);
 
