@@ -8,9 +8,6 @@ const Ekeservice = function Ekeservice(options = {}) {
   const icon = '#fa-pencil';
 
   let viewer;
-  let target;
-  let modal;
-
   async function onMessage(event) {
     if (allowedOrigins) {
       if (!allowedOrigins.some((origin) => origin === event.origin) || !event.data) {
@@ -28,7 +25,6 @@ const Ekeservice = function Ekeservice(options = {}) {
 
     const viewerOptions = viewer.getViewerOptions();
     const eserviceSource = viewerOptions.eserviceSource;
-    console.log(eserviceSource);
 
     const layersToAdd = data.layers;
     layersToAdd.forEach(layer => {
