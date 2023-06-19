@@ -53,7 +53,9 @@ Swap "http://localhost:9966/" to the URL of the Origo map.
 
 **main.js**
 
-Add the layer names of the layers you want to activate in the "layers"-array.
+Add the configuration of the layers you want to activate in the "layers"-array.
+Any configuration added here will be applied on the eserviceSource config on the server. 
+Config attributes sent from the "client" will always take precedent over the server config.
 ```
 const iframeElement = document.querySelector('#origo-map');
 const buttonElement = document.querySelector('#button');
@@ -73,7 +75,7 @@ window.addEventListener('message', (message) => {
       targetPlugin: 'ekeservice',
       type: 'addLayers',
       data: {
-        layers: ['pluginLayer', 'pluginLayer2']
+        layers: layers
       }
     }));
   }
@@ -82,39 +84,24 @@ window.addEventListener('message', (message) => {
 
 **index.json**
 
-Add the layers that are to be able to be activated, just like you would add normal layers, but in the list "eserviceLayers".
+Add base attributes for layers, these can be overwritten by the layer configs sent form the client.
 ```
 ...
-"eserviceLayers": [
-    {
-      "name": "pluginLayer",
-      "title": "plugin-aktiverat lager",
-      "group": "root",
-      "source": "data/origo-cities-3857.geojson",
-      "style": "origo-logo",
-      "type": "GEOJSON",
-      "attributes": [
-        {
-          "name": "name"
-        }
-      ],
-      "visible": true
-    },
-    {
-      "name": "pluginLayer2",
-      "title": "plugin-aktiverat lager2",
-      "group": "root",
-      "source": "data/origo-cities-3857.geojson",
-      "style": "origo-logo",
-      "type": "GEOJSON",
-      "attributes": [
-        {
-          "name": "name"
-        }
-      ],
-      "visible": true
-    }
-  ],
+"eserviceSource":
+  {
+    "name": "pluginLayer",
+    "title": "plugin-aktiverat lager",
+    "group": "root",
+    "source": "data/origo-cities-3857.geojson",
+    "style": "origo-logo",
+    "type": "GEOJSON",
+    "attributes": [
+      {
+        "name": "name"
+      }
+    ],
+    "visible": true
+  }
 ...
 ```
 

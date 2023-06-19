@@ -13,12 +13,12 @@ const Ekeservice = function Ekeservice(options = {}) {
 
   async function onMessage(event) {
     if (allowedOrigins) {
-      if (!allowedOrigins.some((origin) => origin === event.origin) || !event.data || typeof event.data != 'string') {
+      if (!allowedOrigins.some((origin) => origin === event.origin) || !event.data) {
         return;
       }
     }
     
-    const messageJson = JSON.parse(event.data);
+    const messageJson = event.data;
     const targetPlugin = messageJson.targetPlugin || null;
     const messageType = messageJson.type || null;
     const data = messageJson.data || null;
@@ -27,12 +27,12 @@ const Ekeservice = function Ekeservice(options = {}) {
     }
 
     const viewerOptions = viewer.getViewerOptions();
-    const eserviceLayers = viewerOptions.eserviceLayers;
-    console.log(eserviceLayers);
+    const eserviceSource = viewerOptions.eserviceSource;
+    console.log(eserviceSource);
 
     const layersToAdd = data.layers;
-    layersToAdd.forEach(layerName => {
-      const newLayer = eserviceLayers.find(layer => layer.name == layerName);
+    layersToAdd.forEach(layer => {
+      const newLayer = {...eserviceSource, ...layer}
       if (newLayer) {
         viewer.addLayer(newLayer);
       }
@@ -47,11 +47,11 @@ const Ekeservice = function Ekeservice(options = {}) {
     },
     onAdd(evt) {
       viewer = evt.target;
-      window.top.postMessage(JSON.stringify({
+      window.top.postMessage({
         targetPlugin: 'ekeservice',
         type: 'pluginLoaded',
         data: {}
-      }), '*');
+      }, '*');
     },
     render() {
     }
