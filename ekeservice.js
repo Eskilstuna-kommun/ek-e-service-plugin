@@ -5,8 +5,6 @@ const Ekeservice = function Ekeservice(options = {}) {
     allowedOrigins
   } = options;
 
-  const icon = '#fa-pencil';
-
   let viewer;
   async function onMessage(event) {
     if (allowedOrigins) {
@@ -14,7 +12,7 @@ const Ekeservice = function Ekeservice(options = {}) {
         return;
       }
     }
-    
+
     const messageJson = event.data;
     const targetPlugin = messageJson.targetPlugin || null;
     const messageType = messageJson.type || null;
@@ -27,19 +25,18 @@ const Ekeservice = function Ekeservice(options = {}) {
     const eserviceSource = viewerOptions.eserviceSource;
 
     const layersToAdd = data.layers;
-    layersToAdd.forEach(layer => {
-      const newLayer = {...eserviceSource, ...layer}
+    layersToAdd.forEach((layer) => {
+      const newLayer = { ...eserviceSource, ...layer };
       if (newLayer) {
         viewer.addLayer(newLayer);
       }
-    })    
+    });
   }
 
   return Origo.ui.Component({
     name: 'ekeservice',
     onInit() {
       window.addEventListener('message', onMessage);
-
     },
     onAdd(evt) {
       viewer = evt.target;

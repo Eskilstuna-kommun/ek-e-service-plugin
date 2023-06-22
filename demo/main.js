@@ -1,5 +1,4 @@
 const iframeElement = document.querySelector('#origo-map');
-const buttonElement = document.querySelector('#button');
 
 function sendMessage(message) {
   const iframeOrigin = new URL(iframeElement.src).origin;
@@ -7,47 +6,45 @@ function sendMessage(message) {
 }
 
 window.addEventListener('message', (message) => {
-  console.log(message.data);
-
   const data = message.data;
   const messageJson = data;
 
   const layers = [
     {
-      "name": "pluginLayer",
-      "title": "plugin-aktiverat lager",
-      "group": "root",
-      "source": "data/origo-cities-3857.geojson",
-      "style": "origo-logo",
-      "type": "GEOJSON",
-      "attributes": [
+      name: 'pluginLayer',
+      title: 'plugin-aktiverat lager',
+      group: 'root',
+      source: 'data/origo-cities-3857.geojson',
+      style: 'origo-logo',
+      type: 'GEOJSON',
+      attributes: [
         {
-          "name": "name"
+          name: 'name'
         }
       ],
-      "visible": true
+      visible: true
     },
     {
-      "name": "pluginLayer2",
-      "title": "plugin-aktiverat lager2",
-      "group": "root",
-      "source": "data/origo-cities-3857.geojson",
-      "style": "origo-logo",
-      "type": "GEOJSON",
-      "attributes": [
+      name: 'pluginLayer2',
+      title: 'plugin-aktiverat lager2',
+      group: 'root',
+      source: 'data/origo-cities-3857.geojson',
+      style: 'origo-logo',
+      type: 'GEOJSON',
+      attributes: [
         {
-          "name": "name"
+          name: 'name'
         }
       ],
-      "visible": true
+      visible: true
     }
-  ]
+  ];
 
-  if (messageJson.targetPlugin == 'ekeservice' && messageJson.type == 'pluginLoaded') {
+  if (messageJson.targetPlugin === 'ekeservice' && messageJson.type === 'pluginLoaded') {
     sendMessage({
       targetPlugin: 'ekeservice',
       type: 'addLayers',
-      data: {layers: layers}
+      data: { layers }
     });
   }
 });
